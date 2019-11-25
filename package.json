@@ -17,6 +17,7 @@
     "build:js": "babel lib --out-dir dist --extensions .ts,.js"
   },
   "main": "dist/index.js",
+  "sideEffects": false,
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",

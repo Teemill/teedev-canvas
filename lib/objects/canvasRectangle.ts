@@ -4,9 +4,16 @@ import {
 
 import {
   CanvasObject,
+  CanvasObjectParams,
 } from '../index';
 
-export default class CanvasRectangle extends CanvasObject {
+export interface CanvasRectangleParams extends CanvasObjectParams {
+  size   ?: Vector,
+  fill   ?: string,
+  stroke ?: string,
+}
+
+export class CanvasRectangle extends CanvasObject {
   size   : Vector
   fill   : string
   stroke : string
@@ -16,7 +23,8 @@ export default class CanvasRectangle extends CanvasObject {
 
     fill   = '',
     stroke = '',
-  } = {}) {
+  } : CanvasRectangleParams) {
+    // @ts-ignore
     super(...arguments);
 
     this.size   = size;

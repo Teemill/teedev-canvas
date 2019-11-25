@@ -4,7 +4,7 @@ import {
   Transform,
 } from '@teedev/core';
 
-export default class CanvasContext extends CanvasRenderingContext2D {
+export class CanvasContext extends CanvasRenderingContext2D {
   private _transform: Transform
 
   private originalSetTransform : Function

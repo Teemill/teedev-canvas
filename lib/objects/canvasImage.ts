@@ -4,9 +4,17 @@ import {
 
 import {
   CanvasObject,
+  CanvasObjectParams,
 } from '../index';
 
-export default class CanvasImage extends CanvasObject {
+interface CanvasImageParams extends CanvasObjectParams {
+  src    ?: string
+  size   ?: Vector
+  fill   ?: string
+  stroke ?: string
+}
+
+export class CanvasImage extends CanvasObject {
   size   : Vector
   fill   : string
   stroke : string
@@ -18,7 +26,8 @@ export default class CanvasImage extends CanvasObject {
     size   = new Vector(0, 0),
     fill   = '',
     stroke = '',
-  } = {}) {
+  }: CanvasImageParams) {
+    // @ts-ignore
     super(...arguments);
 
     this.size   = size;

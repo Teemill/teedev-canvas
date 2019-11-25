@@ -2,7 +2,7 @@ import {
   CanvasObject,
 } from './index';
 
-export default class CanvasLayer {
+export class CanvasLayer {
   index  : number
   objects: CanvasObject[]
 
@@ -11,11 +11,13 @@ export default class CanvasLayer {
     this.objects = [];
   }
 
-  addObject(object: CanvasObject) {
-    this.objects.push(object);
+  public addObject(...object: CanvasObject[]): CanvasLayer {
+    this.objects.push(...object);
+
+    return this;
   }
 
-  render(context: CanvasRenderingContext2D) {
+  public render(context: CanvasRenderingContext2D) {
     this.objects.forEach((object) => {
       object.render(context);
     });

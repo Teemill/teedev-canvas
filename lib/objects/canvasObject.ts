@@ -7,7 +7,17 @@ import {
   Canvas,
 } from "../index";
 
-export default class CanvasObject {
+export interface CanvasObjectParams {
+  position ?: Vector
+  angle    ?: Angle
+  scale    ?: Vector
+  children ?: CanvasObject[]
+  beforeRender ?: Function | null
+  onRender     ?: Function | null
+  afterRender  ?: Function | null
+}
+
+export class CanvasObject {
   canvas   : Canvas | null
 
   position : Vector
@@ -30,7 +40,7 @@ export default class CanvasObject {
     beforeRender = null,
     onRender     = null,
     afterRender  = null,
-  } = {}) {
+  }: CanvasObjectParams) {
     this.canvas = null;
 
     this.angle    = angle;

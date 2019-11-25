@@ -8,23 +8,30 @@ import {
   CanvasObject,
 } from './index';
 
-export default class Canvas {
+export interface CanvasParams {
+  size   ?: Vector,
+  canvas : HTMLCanvasElement,
+  beforeRender ?: Function,
+  afterRender  ?: Function,
+}
+
+export class Canvas {
   public canvas : HTMLCanvasElement | null
   public layers : CanvasLayer[]
   
   private size           : Vector
   private renderingFrame : boolean
 
-  private beforeRenderHandler : Function | null
-  private afterRenderHandler  : Function | null
+  private beforeRenderHandler : Function | undefined
+  private afterRenderHandler  : Function | undefined
   
   constructor({
+    canvas,
     size   = new Vector(100, 100),
-    canvas = null,
 
-    beforeRender = null,
-    afterRender  = null,
-  } = {}) {
+    beforeRender = undefined,
+    afterRender  = undefined,
+  }: CanvasParams) {
     this.size   = size;
     this.canvas = canvas;
 
@@ -41,23 +48,23 @@ export default class Canvas {
     }
   }
 
-  set width(value: number) {
+  public set width(value: number) {
     this.size.x = value;
   }
 
-  set height(value: number) {
+  public set height(value: number) {
     this.size.y = value;
   }
 
-  get width(): number {
+  public get width(): number {
     return this.size.x;
   }
 
-  get height(): number {
+  public get height(): number {
     return this.size.y;
   }
 
-  get context(): CanvasRenderingContext2D | null {
+  public get context(): CanvasRenderingContext2D | null {
     if (!this.canvas) {
       return null;
     }
@@ -65,7 +72,7 @@ export default class Canvas {
     return this.canvas.getContext('2d');
   }
 
-  getLayer(index: number) {
+  public getLayer(index: number) {
     // eslint-disable-next-line
     const layer = this.layers.find(layer => layer.index === index);
 
@@ -76,23 +83,26 @@ export default class Canvas {
     return this.addLayer(index);
   }
 
-  addLayer(index: number) {
+  public addLayer(index: number) {
     const newLayer = new CanvasLayer(index);
     this.layers.push(newLayer);
 
     return newLayer;
   }
 
-  addObject(
-    object: CanvasObject,
+  public addObjects(
+    objects: CanvasObject[],
     layerIndex: number = 0,
-  ) {
-    this.getLayer(layerIndex).addObject(object);
+  ): Canvas {
+    this.getLayer(layerIndex).addObject(...objects);
 
-    object.load(this);
+    console.log(objects);
+    objects.forEach(o => o.load(this));
+
+    return this;
   }
 
-  render() {
+  public render() {
     if (
       this.context &&
       !this.renderingFrame
@@ -121,5 +131,7 @@ export default class Canvas {
         this.renderingFrame = false;
       });
     }
+
+    return this;
   }
 }
