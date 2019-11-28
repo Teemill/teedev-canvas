@@ -34,19 +34,14 @@ export class CanvasRectangle extends CanvasObject {
   }
 
   render(context: CanvasRenderingContext2D) {
-    super.render(
-      context,
-      () => {
-        context.fillStyle = this.fill;
-        context.strokeStyle = this.stroke;
+    context.fillStyle = this.fill;
+    context.strokeStyle = this.stroke;
 
-        context.fillRect(
-          0,
-          0,
-          this.size.x,
-          this.size.y,
-        );
-      },
+    context.fillRect(
+      0,
+      0,
+      this.size.x,
+      this.size.y,
     );
   }
 }

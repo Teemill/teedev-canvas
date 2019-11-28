@@ -17,9 +17,9 @@ export class CanvasLayer {
     return this;
   }
 
-  public render(context: CanvasRenderingContext2D) {
+  public _render(context: CanvasRenderingContext2D) {
     this.objects.forEach((object) => {
-      object.render(context);
+      object._render(context);
     });
   }
 }

@@ -44,27 +44,22 @@ export class CanvasImage extends CanvasObject {
     this.image.src = value;
   }
 
-  onImageLoaded() {
+  private onImageLoaded() {
     if (this.canvas) {
       this.canvas.render();
     }
   }
 
-  render(context: CanvasRenderingContext2D) {
-    super.render(
-      context,
-      () => {
-        context.fillStyle = this.fill;
-        context.strokeStyle = this.stroke;
+  protected render(context: CanvasRenderingContext2D) {
+    context.fillStyle = this.fill;
+    context.strokeStyle = this.stroke;
 
-        context.drawImage(
-          this.image,
-          0,
-          0,
-          this.size.x,
-          this.size.y,
-        );
-      },
+    context.drawImage(
+      this.image,
+      0,
+      0,
+      this.size.x,
+      this.size.y,
     );
   }
 }

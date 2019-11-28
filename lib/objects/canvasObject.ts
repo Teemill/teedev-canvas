@@ -8,27 +8,27 @@ import {
 } from "../index";
 
 export interface CanvasObjectParams {
-  position ?: Vector
-  angle    ?: Angle
-  scale    ?: Vector
-  children ?: CanvasObject[]
-  beforeRender ?: Function | null
-  onRender     ?: Function | null
-  afterRender  ?: Function | null
+  position     ?: Vector;
+  angle        ?: Angle;
+  scale        ?: Vector;
+  children     ?: CanvasObject[];
+  beforeRender ?: Function;
+  onRender     ?: Function;
+  afterRender  ?: Function;
 }
 
 export class CanvasObject {
-  canvas   : Canvas | null
+  canvas   ?: Canvas;
 
-  position : Vector
-  angle    : Angle
-  scale    : Vector
+  position : Vector;
+  angle    : Angle;
+  scale    : Vector;
 
-  children : CanvasObject[]
+  children : CanvasObject[];
 
-  beforeRenderHandler : Function | null
-  onRenderHandler     : Function | null
-  afterRenderHandler  : Function | null
+  beforeRenderHandler ?: Function;
+  onRenderHandler     ?: Function;
+  afterRenderHandler  ?: Function;
 
   constructor({
     angle    = new Angle(0),
@@ -37,11 +37,11 @@ export class CanvasObject {
 
     children = [],
 
-    beforeRender = null,
-    onRender     = null,
-    afterRender  = null,
-  }: CanvasObjectParams) {
-    this.canvas = null;
+    beforeRender,
+    onRender,
+    afterRender,
+  }: CanvasObjectParams = {}) {
+    this.canvas = undefined;
 
     this.angle    = angle;
     this.scale    = scale;
@@ -54,48 +54,49 @@ export class CanvasObject {
     this.afterRenderHandler  = afterRender;
   }
 
-  load(
-    canvas    : Canvas,
-    callback ?: Function
-  ) {
+  public get mouse() {
+    if (!this.canvas) {
+      return undefined;
+    }
+
+    return this.canvas.mouse;
+  }
+
+  public _load(canvas: Canvas) {
     // TODO - Might need to be an array so element can be rendered on multiple canvases.
     this.canvas = canvas;
 
-    if (callback) {
-      callback(canvas);
-    }
+    this.load(canvas);
 
     if (this.children.length) {
       this.children.forEach((child) => {
-        child.load(canvas, callback);
+        child._load(canvas);
       });
     }
   }
 
-  render(
-    context   : CanvasRenderingContext2D,
-    callback ?: Function
-  ) {
+  public _render(context: CanvasRenderingContext2D) {
+    context.save();
+    
     if (this.beforeRenderHandler) {
       this.beforeRenderHandler(this, context);
     }
-
-    context.save();
+    
     context.translate(this.position.x, this.position.y);
     context.rotate(this.angle.radians);
     context.scale(this.scale.x, this.scale.y);
 
-    if (callback) {
-      callback();
-    }
+    this.render(context);
 
     if (this.onRenderHandler) {
       this.onRenderHandler(this, context);
     }
     
-    this.children.forEach((child) => {
-      child.render(context);
-    });
+    if (this.children.length) {
+      this.children.forEach((child) => {
+        child._render(context);
+      });
+    }
 
     if (this.afterRenderHandler) {
       this.afterRenderHandler(this, context);
@@ -103,4 +104,12 @@ export class CanvasObject {
 
     context.restore();
   }
+
+  protected load(
+    canvas: Canvas
+  ) {}
+
+  protected render(
+    context: CanvasRenderingContext2D,
+  ) {}
 }
